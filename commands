@@ -1,0 +1,146 @@
+Linux用户与权限管理命令
+
+（1）新建用户
+useradd 用户名
+
+注：用户信息文件为/etc/passwd
+
+此命令执行成功后，在/home目录下将会创建一个与用户名同名的子目录，这个目录即为改用户的家目录，用户登录后即进入到这个家目录中。
+
+创建用户时还可以指定一些参数：
+
+useradd [-c comment] [-d home_dir]   [-e expire_date] [-f inactive_time]  [-g initial_group] [-G group[,...]]  [-m [-k skeleton_dir] | -M] [-s shell]  [-u uid [ -o]] [-n] [-r] login
+
+-c comment
+  添加注释
+
+-d home_dir
+  用户home目录的路径，默认为/home/login_name
+
+-e expire_date
+
+   帐号过期日期
+
+-f inactive_time
+
+   帐号过期几日后永久停用
+
+-g initial_group
+
+         group名称或以数字来做为使用者登入起始群组(group)。群组名须为现有存在的名称 
+
+      -G group[,...] 
+
+         补充组的列表，使用户成为组列表的成员
+
+例：useradd -d /home/stu03 -g 500 stu2017   
+
+useradd stu08
+
+（2）修改用户信息
+usermod  参数  用户名
+
+usermod [-LU][-c <备注>][-d <登入目录>][-e <有效期限>][-f <缓冲天数>][-g <群组>][-G <群组>][-l <帐号名称>][-s ][-u ][用户帐号]
+
+例：usermod -s /bin/bash stu2011
+
+（3）删除用户
+userdel 用户名
+
+userdel  –r  用户名//删除用户的同时，也将删除用户的家目录
+
+（4）给用户设置密码
+passwd 用户名
+
+注：输入的密码信息不会被回显
+
+（5）添加新组
+ groupadd [-g gid [-o]] [-r] [-f] group
+
+例：groupadd stu
+
+（6）组修改命令
+例：groupmod [-g <群组识别码> <-o>][-n <新群组名称>][群组名称]
+
+（7）删除组命令
+groupdel [群组名称]
+
+例：groupdel stu
+
+（8）改变文件或目录的组拥有权
+chgrp
+
+格式： chgrp  [-R]  groupname  filename   
+
+例：   chgrp  vlsi  file1         将文件file1改为vlsi组所有
+
+       chgrp  -R  image  dir1     将目录dir1及其下所有文件和子目录，改为image群组
+
+（9）改变文件或目录所有权
+chown
+
+格式：chown  [-R]  username  filename        
+
+例：   chown  user   file1         将文件file1改为user所有
+
+       chown  .fox   file1        将文件file1改为fox组所有
+
+       chown  user.fox   file1   将文件file1改为fox组的user所有
+
+       chown  -R  user  dir1       将目录dir1及其下所有文件和子目录，改为user 所有
+
+（10）修改文件或目录的访问权限
+改变文件或目录的读、写、执行的允许权
+
+格式：chmod  [-R]  mode  filename
+
+其中：[-R]为递归处理,将指定目录下所有文件及子目录一并处理
+
+      mode为3-8位数字，是文件/目录读、写、执行允许权的缩写(r:read,数字代号为"4"    w:write,数字代号为"2"   x:execute,数字代号为"1")
+
+mode：   rwx     rwx      rwx  
+
+       user     group    other
+
+缩写：  (u)      (g)      (o)
+
+例：chmod  755  dir1    将目录dir1设定成任何人皆有读取及执行的权利，但只有拥有者可作写修改。其中7=4+2+1,5=4+1
+
+推荐做法：chmod [u|g|o|ug|uo|go|a]±[r|w|x|rw|rx|wx|rwx] 文件名
+
+注：+代表追加权限，-代表收回权限
+
+u代表owner，g代表group，o代表other，a代表所有用户
+
+r代表读权限，w代表写权限，x代表执行权限
+
+chmod  700  file1     将file1设为拥有者可以读、写和执行
+
+chmod  o+x  file2     将file2，增加拥有者可执行的权利
+
+chmod  g+x  file3     将file3，增加组用户可执行的权利
+
+chmod  o-r    file4    将file4，收回其它使用者可读取的权利
+
+也可以多个权限同时修改：
+
+如：file1文件的权限为：rw-rw-r--，则可以通过下列命令给owner追加x权限，给group收回w权限，给other用户收回r权限
+
+chmod u+x,g-w,o-r file1
+
+以上命令执行成功后，file1文件的权限变为：rwxr-----
+
+（11）工作组文件/etc/group和/etc/gshadow的管理工具
+gpasswd
+
+-a : 添加用户到组
+
+-d : 从组删除用户
+
+-A：指定管理员
+
+-M：指定组成员和-A的用途差不多；
+
+-r：删除密码；
+
+例：gpasswd -a userA groupB  将userA添加到groupB用户组里面
